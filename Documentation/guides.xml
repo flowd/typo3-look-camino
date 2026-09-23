@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<guides
+    xmlns="https://www.phpdoc.org/guides"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+    links-are-relative="true"
+>
+    <extension
+        class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+        project-home="https://github.com/flowd/typo3-look-camino"
+        project-repository="https://github.com/flowd/typo3-look-camino"
+        project-issues="https://github.com/flowd/typo3-look-camino/issues"
+        edit-on-github="flowd/typo3-look-camino"
+        edit-on-github-branch="main"
+        typo3-core-preferred="stable"
+        interlink-shortcode="flowd/typo3-look-camino"
+    />
+    <project
+        title="Look previews for Camino"
+        version="main"
+        copyright="since 2026 by Flowd GmbH"
+    />
+    <inventory id="t3coreapi" url="https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/"/>
+    <inventory id="t3tsconfig" url="https://docs.typo3.org/m/typo3/reference-tsconfig/main/en-us/"/>
+    <inventory id="look" url="https://docs.typo3.org/p/flowd/typo3-look/main/en-us/"/>
+    <inventory id="camino" url="https://docs.typo3.org/c/typo3/theme-camino/main/en-us/"/>
+</guides>

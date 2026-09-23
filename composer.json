@@ -21,7 +21,8 @@
 	"homepage": "https://github.com/flowd/typo3-look-camino",
 	"support": {
 		"issues": "https://github.com/flowd/typo3-look-camino/issues",
-		"source": "https://github.com/flowd/typo3-look-camino"
+		"source": "https://github.com/flowd/typo3-look-camino",
+		"docs": "https://docs.typo3.org/p/flowd/typo3-look-camino/main/en-us/"
 	},
 	"require": {
 		"php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
