@@ -1,5 +1,8 @@
 # Look previews for the TYPO3 Camino theme
 
+[![TYPO3 14](https://img.shields.io/badge/TYPO3-14.3-orange)](https://get.typo3.org/)
+[![License GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)](LICENSE)
+
 Real frontend previews in the TYPO3 page module for the content elements of
 [Camino](https://docs.typo3.org/c/typo3/theme-camino/main/en-us/), the default
 theme of TYPO3 v14. Built on [Look](https://github.com/flowd/typo3-look)
