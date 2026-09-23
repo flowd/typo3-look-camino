@@ -1,0 +1,108 @@
+# Publishes a GitHub release to the TYPO3 Extension Repository (TER).
+#
+# Create a release with a semantic version tag (e.g. 1.2.0). The workflow writes the tag into
+# ext_emconf.php with TYPO3 Tailor (the committed file carries a placeholder), verifies the result and
+# uploads the extension using the release notes as upload comment. Required repository secret:
+# TYPO3_API_TOKEN (create it at https://extensions.typo3.org/my-access-tokens with the "extension
+# publishing" scope, limited to this extension). The secret is exposed to the upload step only.
+#
+# To repeat the upload for an existing release (e.g. after a failed run), start the workflow by hand
+# with the tag of that release. It then runs with the workflow file of the chosen branch, checks out
+# the tag and reads the release notes from the release.
+name: Publish to TER
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of an existing GitHub release to upload to the TER
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Upload to TER
+    runs-on: ubuntu-latest
+    steps:
+      # The tag comes from the release event or from the manual input; the input reaches the
+      # script through the environment, not through "${{ }}" interpolation (see the upload step).
+      - name: Tag and version
+        id: release
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          TAG="${INPUT_TAG:-$GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if ! echo "$VERSION" | grep -Eq '^(0|[1-9][0-9]{0,2})(\.(0|[1-9][0-9]{0,2})){2}$'; then
+            echo "Tag '$TAG' is not a semantic version (three numbers, each 0 to 999)"; exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ steps.release.outputs.tag }}
+
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install TYPO3 Tailor
+        run: composer global require typo3/tailor:2.0.0 --no-interaction --no-progress
+
+      - name: Write version into ext_emconf.php
+        run: tailor set-version "$version"
+
+      - name: Verify ext_emconf.php version (extension key from composer.json, as Tailor reads it)
+        run: |
+          set -euo pipefail
+          ACTUAL=$(php -d display_errors=stderr -r '
+            $composer = json_decode((string)file_get_contents("composer.json"), true);
+            $_EXTKEY = $composer["extra"]["typo3/cms"]["extension-key"] ?? "";
+            if ($_EXTKEY === "") { fwrite(STDERR, "composer.json has no extra.typo3/cms.extension-key\n"); exit(1); }
+            $EM_CONF = [];
+            include "ext_emconf.php";
+            echo $EM_CONF[$_EXTKEY]["version"] ?? "";
+          ')
+          if [ "$ACTUAL" != "$version" ]; then
+            echo "ext_emconf.php carries version '$ACTUAL', expected '$version'"; exit 1
+          fi
+
+      - uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+        with:
+          version: '3.11'
+
+      # The release body reaches the script through the environment, never through "${{ }}"
+      # interpolation: expressions are substituted into the script text before the shell runs, so a
+      # body could otherwise end the here-document and have the rest executed as shell commands.
+      # The TER shows the upload comment as plain text, so the Markdown of the release notes is
+      # converted with pandoc. Link targets of [text](url) links are dropped; the release URL at the
+      # top leads to the full notes.
+      - name: Upload to TER
+        env:
+          TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          REPOSITORY: ${{ github.repository }}
+          TAG: ${{ steps.release.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            # fails if there is no release for the tag
+            RELEASE_BODY="$(gh release view "$TAG" --repo "$REPOSITORY" --json body --jq .body)"
+          fi
+          RELEASE_URL="https://github.com/$REPOSITORY/releases/tag/$TAG"
+          if [ -z "$(printf '%s' "$RELEASE_BODY" | tr -d '[:space:]')" ]; then
+            COMMENT="Release $version, see $RELEASE_URL"
+          else
+            NOTES="$(printf '%s' "$RELEASE_BODY" | pandoc --from gfm --to plain --wrap=none)"
+            COMMENT="Full release notes: $RELEASE_URL"$'\n\n'"$NOTES"
+          fi
+          tailor ter:publish --comment "$COMMENT" "$version"

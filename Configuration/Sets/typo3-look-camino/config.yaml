@@ -1,0 +1,4 @@
+name: flowd/typo3-look-camino
+label: "Look previews for Camino"
+dependencies:
+  - typo3/theme-camino

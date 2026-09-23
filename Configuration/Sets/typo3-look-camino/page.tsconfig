@@ -1,0 +1,18 @@
+# Replace the summary previews of the Camino theme with real frontend previews
+# rendered by EXT:look. One template serves all content types; it renders the
+# Camino frontend template that matches the CType.
+mod.web_layout.tt_content.preview {
+  camino_author = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_hero = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_hero_small = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_hero_text_only = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_linklist = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_sociallinks = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_testimonial = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_textmedia_teaser = EXT:look_camino/Resources/Private/Templates/Preview/Teaser.html
+  camino_textmedia_teaser_grid = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  camino_textteaser = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  text = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  textmedia = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+  textpic = EXT:look_camino/Resources/Private/Templates/Preview/Content.html
+}

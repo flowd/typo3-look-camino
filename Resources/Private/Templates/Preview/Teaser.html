@@ -1,0 +1,14 @@
+<html data-namespace-typo3-fluid="true"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:look="http://typo3.org/ns/Flowd/Typo3Look/ViewHelper">
+<f:comment>
+    Teasers in the sidebar can get tall (image plus text). A fixed height keeps
+    the page module compact; the fade-out shows editors that the element continues.
+</f:comment>
+<look:backend.contentPreview
+    record="{record}"
+    height="340"
+    bodyClass="{look:site.setting(pageUid: record.pid, name: 'camino.colorScheme')}"
+    css="{0: 'EXT:theme_camino/Resources/Public/Css/main.css'}"
+    js="{0: 'EXT:theme_camino/Resources/Public/JavaScript/main.js'}" />
+</html>

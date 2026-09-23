@@ -1,0 +1,14 @@
+<html data-namespace-typo3-fluid="true"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:look="http://typo3.org/ns/Flowd/Typo3Look/ViewHelper">
+<f:comment>
+    One preview for every Camino content type: Look renders the record with the
+    frontend TypoScript of its page in a separate request, inside Camino's
+    stylesheet and colour scheme.
+</f:comment>
+<look:backend.contentPreview
+    record="{record}"
+    bodyClass="{look:site.setting(pageUid: record.pid, name: 'camino.colorScheme')}"
+    css="{0: 'EXT:theme_camino/Resources/Public/Css/main.css'}"
+    js="{0: 'EXT:theme_camino/Resources/Public/JavaScript/main.js'}" />
+</html>

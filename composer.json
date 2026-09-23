@@ -1,0 +1,43 @@
+{
+	"name": "flowd/typo3-look-camino",
+	"description": "Look previews for the TYPO3 Camino theme: Camino content elements in the page module, rendered with the real frontend templates",
+	"license": "GPL-2.0-or-later",
+	"type": "typo3-cms-extension",
+	"keywords": [
+		"typo3",
+		"backend",
+		"page module",
+		"preview",
+		"camino"
+	],
+	"authors": [
+		{
+			"name": "Sascha Egerer",
+			"email": "sascha.egerer@flowd.de",
+			"role": "Developer",
+			"homepage": "https://flowd.de"
+		}
+	],
+	"homepage": "https://github.com/flowd/typo3-look-camino",
+	"support": {
+		"issues": "https://github.com/flowd/typo3-look-camino/issues",
+		"source": "https://github.com/flowd/typo3-look-camino"
+	},
+	"require": {
+		"php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+		"flowd/typo3-look": "^1.1",
+		"typo3/cms-core": "^14.3",
+		"typo3/theme-camino": "^14.3"
+	},
+	"replace": {
+		"typo3-ter/look-camino": "self.version"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-main": "1.0.x-dev"
+		},
+		"typo3/cms": {
+			"extension-key": "look_camino"
+		}
+	}
+}
